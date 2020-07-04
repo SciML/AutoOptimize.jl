@@ -1,0 +1,13 @@
+name = "AutoOptimize"
+uuid = "ff3c4d4f-bb3e-4d8b-9ad2-cd8aaafb4e41"
+authors = ["ChrisRackauckas <accounts@chrisrackauckas.com> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
