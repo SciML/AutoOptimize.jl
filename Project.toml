@@ -3,6 +3,17 @@ uuid = "ff3c4d4f-bb3e-4d8b-9ad2-cd8aaafb4e41"
 authors = ["ChrisRackauckas <accounts@chrisrackauckas.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+DiffEqBase = "2b5f629d-d688-5b77-993f-72d75c75574e"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
+ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
+OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+SparseDiffTools = "47a9eef4-7e08-11e9-0b38-333d64bd3804"
+SparsityDetection = "684fba80-ace3-11e9-3d08-3bc7ed6f96df"
+
 [compat]
 julia = "1.4"
 
