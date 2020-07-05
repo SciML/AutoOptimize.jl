@@ -15,6 +15,7 @@ SparseDiffTools = "47a9eef4-7e08-11e9-0b38-333d64bd3804"
 SparsityDetection = "684fba80-ace3-11e9-3d08-3bc7ed6f96df"
 
 [compat]
+OrdinaryDiffEq = "5.41"
 julia = "1.4"
 
 [extras]
