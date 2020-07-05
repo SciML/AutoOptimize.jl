@@ -20,6 +20,7 @@ SparsityDetection = "0.3"
 DiffEqBase = "6.40"
 CUDA = "1.0"
 SparseDiffTools = "1.9"
+ModelingToolkit = "3.11"
 julia = "1.4"
 
 [extras]
