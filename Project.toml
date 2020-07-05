@@ -16,6 +16,10 @@ SparsityDetection = "684fba80-ace3-11e9-3d08-3bc7ed6f96df"
 
 [compat]
 OrdinaryDiffEq = "5.41"
+SparsityDetection = "0.3"
+DiffEqBase = "6.40"
+CUDA = "1.0"
+SparseDiffTools = "1.9"
 julia = "1.4"
 
 [extras]
