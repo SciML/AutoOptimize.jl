@@ -38,21 +38,27 @@ function auto_optimize(prob::ODEProblem,alg=nothing;
             verbose && println("Try ModelingToolkitization")
             try
                   sys = modelingtoolkitize(prob)
-                  jac = calculate_jacobian(sys)
-                  sparsejac = sparse(jac)
-                  sparsity_percentage = length(sparsejac.nzvals)/length(vec(jac))
-                  form = N > MULTITHREADING_CUTOFF ? MultithreadedForm() : SerialForm()
+                  jac = calculate_jacobian(sys,sparse=false)
+                  sparsejac = SparseArrays.sparse(jac)
+                  sparsity_percentage = length(nonzeros(sparsejac))/length(vec(jac))
+
+                  if N > SPARSE_CUTOFF && sparsity_percentage < SPARSE_PERCENTAGE_CUTOFF
+                        sys.jac[] = sparsejac
+                  end
+
+                  form = N > MULTITHREADING_CUTOFF ? ModelingToolkit.MultithreadedForm() : ModelingToolkit.SerialForm()
 
                   prob = ODEProblem(sys,prob.u0,prob.tspan,prob.p,
-                                    jac = true, tgrad = true,
+                                    jac = true, tgrad = true, simplify = true,
                                     sparse = N > SPARSE_CUTOFF &&
-                                             sparsity_percentage > SPARSE_PERCENTAGE_CUTOFF,
+                                             sparsity_percentage < SPARSE_PERCENTAGE_CUTOFF,
                                     parallel = form,
                                     prob.kwargs...)
                   return prob,alg
             catch e
                   @warn("ModelingToolkitization Approach Failed")
                   verbose && println(e)
+                  throw(e)
             end
       end
 
@@ -63,7 +69,7 @@ function auto_optimize(prob::ODEProblem,alg=nothing;
                   output = similar(input)
                   sparsity_pattern = jacobian_sparsity(f,output,input,SparsityDetection.Fixed(prob.p),prob.tspan[1])
                   sparsejac = sparse(sparsity_pattern)
-                  sparsity_percentage = length(sparsejac.nzvals)/prod(size(jac))
+                  sparsity_percentage = length(nonzeros(sparsejac))/prod(size(jac))
                   if sparsity_percentage < SPARSE_PERCENTAGE_CUTOFF && sparsity_percentage > COLORVEC_PERCENTAGE_CUTOFF
                         # Doesn't make sense to do sparsity for lu but does make sense for differentiation
                         colorvec = matrix_colors(sparsejac)
