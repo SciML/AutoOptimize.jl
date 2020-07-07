@@ -81,16 +81,14 @@ _prob,_alg = auto_optimize(prob)
 After this churns away for a bit, you go boom:
 
 ```julia
-@btime solve(_prob, TRBDF2()) # 488.608 ms (8224 allocations: 109.25 MiB)
+@btime solve(_prob, TRBDF2()) # 168.558 ms (4925 allocations: 101.41 MiB)
 ```
 
 and there you go, now you're solving 4 PDEs a second. What was it like
 before the optimization?
 
 ```julia
-@btime solve(prob, TRBDF2(autodiff=false))
+@btime solve(prob, TRBDF2(autodiff=false)) # 249.993 s (18560715 allocations: 1281.93 GiB)
 ```
 
-I don't even know how long that takes to run because I ended up stopping
-it, but if you run it long enough to let me know the speedup I'll be
-thankful.
+That's a lean 1483x temporal speedup and 12945x reduction in memory requirements!
