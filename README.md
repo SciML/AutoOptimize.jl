@@ -91,4 +91,4 @@ before the optimization?
 @btime solve(prob, TRBDF2(autodiff=false)) # 249.993 s (18560715 allocations: 1281.93 GiB)
 ```
 
-That's a lean 1483x temporal speedup and 12945x reduction in memory requirements!
+That's a lean 1483x temporal speedup!
