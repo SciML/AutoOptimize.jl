@@ -65,8 +65,16 @@ function auto_optimize(prob::ODEProblem,alg=nothing;
       if stiff && N > SPARSE_CUTOFF && sparsify
             verbose && println("Try SparsityDetection")
             try
-                  input = copy(u0)
+                  input = copy(prob.u0)
                   output = similar(input)
+                  function f(du,u,p,t)
+                        if isinplace(prob.f)
+                              prob.f.f(du,u,p,t)
+                        else
+                              du .= prob.f.f(u,p,t)
+                        end
+                        return nothing
+                  end
                   sparsity_pattern = jacobian_sparsity(f,output,input,SparsityDetection.Fixed(prob.p),prob.tspan[1])
                   sparsejac = sparse(sparsity_pattern)
                   sparsity_percentage = length(nonzeros(sparsejac))/prod(size(jac))
@@ -92,11 +100,12 @@ function auto_optimize(prob::ODEProblem,alg=nothing;
             verbose && println("Try GPUification")
             try
                   CUDA.allowscalar(false)
-                  gu0 = cu(prob.u0)
+                  u0 = prob.u0
+                  gu0 = cu(u0)
 
-                  if gpup isa Boolean && gpup
+                  if gpup isa Bool && gpup
                         gp = cu(prob.p)
-                  elseif gpup isa Boolean && !gpup
+                  elseif gpup isa Bool && !gpup
                         gp = prob.p
                   else
                         # Guess whether p should be on the GPU too
