@@ -100,7 +100,8 @@ function auto_optimize(prob::ODEProblem,alg=nothing;
             verbose && println("Try GPUification")
             try
                   CUDA.allowscalar(false)
-                  gu0 = cu(prob.u0)
+                  u0 = prob.u0
+                  gu0 = cu(u0)
 
                   if gpup isa Bool && gpup
                         gp = cu(prob.p)
