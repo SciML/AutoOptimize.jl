@@ -31,8 +31,22 @@ function auto_optimize(prob::ODEProblem,alg=nothing;
                        mtkify = true,
                        sparsify = true,
                        gpuify = true,
+                       static = true,
                        gpup = nothing)
       N = length(prob.u0)
+
+      if static
+            verbose && println("Try Converting Arrays to Static Arrays")
+            if prob.u0 isa StaticArray
+                  verbose && println("u0 is already Static Array")
+            else
+                  if N > 10
+                        verbose && println("Size more that 10")
+                  else
+                        prob = remake(prob, u0=MArray{Tuple{size(u0)...}}(u0))
+                  end
+            end
+      end
 
       if mtkify
             verbose && println("Try ModelingToolkitization")
