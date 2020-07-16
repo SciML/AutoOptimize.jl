@@ -54,9 +54,8 @@ function auto_optimize(prob::ODEProblem,alg=nothing;
                   if static
                         prob = ODEProblem{false}(sys,SArray{Tuple{size(prob.u0)...}}(prob.u0),prob.tspan,prob.p,
                                           jac = true, tgrad = true, simplify = true,
-                                          sparse = N > SPARSE_CUTOFF &&
-                                                   sparsity_percentage < SPARSE_PERCENTAGE_CUTOFF,
-                                          parallel = form,
+                                          sparse = false,
+                                          parallel = false,
                                           prob.kwargs...)
                   else
                         prob = ODEProblem(sys,prob.u0,prob.tspan,prob.p,
