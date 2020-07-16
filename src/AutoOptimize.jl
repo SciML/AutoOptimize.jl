@@ -1,12 +1,13 @@
 module AutoOptimize
 
 using DiffEqBase, ModelingToolkit, SparsityDetection, SparseDiffTools,
-      CUDA, Logging, LinearAlgebra, SparseArrays, OrdinaryDiffEq
+      CUDA, Logging, LinearAlgebra, SparseArrays, OrdinaryDiffEq, StaticArrays
 
 MULTITHREADING_CUTOFF = 2^10
 SPARSE_CUTOFF = 2^8
 SPARSE_PERCENTAGE_CUTOFF = 0.01
 COLORVEC_PERCENTAGE_CUTOFF = 0.5
+STATIC_ARRAY_CUTOFF = 10
 
 """
 tune_system
@@ -31,6 +32,7 @@ function auto_optimize(prob::ODEProblem,alg=nothing;
                        mtkify = true,
                        sparsify = true,
                        gpuify = true,
+                       static = true,
                        gpup = nothing)
       N = length(prob.u0)
 
@@ -47,13 +49,22 @@ function auto_optimize(prob::ODEProblem,alg=nothing;
                   end
 
                   form = N > MULTITHREADING_CUTOFF ? ModelingToolkit.MultithreadedForm() : ModelingToolkit.SerialForm()
+                  static = static && N < STATIC_ARRAY_CUTOFF
 
-                  prob = ODEProblem(sys,prob.u0,prob.tspan,prob.p,
-                                    jac = true, tgrad = true, simplify = true,
-                                    sparse = N > SPARSE_CUTOFF &&
-                                             sparsity_percentage < SPARSE_PERCENTAGE_CUTOFF,
-                                    parallel = form,
-                                    prob.kwargs...)
+                  if static
+                        prob = ODEProblem{false}(sys,SArray{Tuple{size(prob.u0)...}}(prob.u0),prob.tspan,prob.p,
+                                          jac = true, tgrad = true, simplify = true,
+                                          sparse = false,
+                                          parallel = false,
+                                          prob.kwargs...)
+                  else
+                        prob = ODEProblem(sys,prob.u0,prob.tspan,prob.p,
+                                          jac = true, tgrad = true, simplify = true,
+                                          sparse = N > SPARSE_CUTOFF &&
+                                                   sparsity_percentage < SPARSE_PERCENTAGE_CUTOFF,
+                                          parallel = form,
+                                          prob.kwargs...)
+                  end
                   return prob,alg
             catch e
                   @warn("ModelingToolkitization Approach Failed")
