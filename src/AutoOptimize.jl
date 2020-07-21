@@ -40,13 +40,8 @@ function auto_optimize(prob::ODEProblem,alg=nothing;
             verbose && println("Try ModelingToolkitization")
             try
                   sys = modelingtoolkitize(prob)
-                  jac = calculate_jacobian(sys,sparse=false)
-                  sparsejac = SparseArrays.sparse(jac)
-                  sparsity_percentage = length(nonzeros(sparsejac))/length(vec(jac))
-
-                  if N > SPARSE_CUTOFF && sparsity_percentage < SPARSE_PERCENTAGE_CUTOFF
-                        sys.jac[] = sparsejac
-                  end
+                  sparsejac = ModelingToolkit.jacobian_sparsity(sys)
+                  sparsity_percentage = length(nonzeros(sparsejac))/length(vec(sparsejac))
 
                   form = N > MULTITHREADING_CUTOFF ? ModelingToolkit.MultithreadedForm() : ModelingToolkit.SerialForm()
                   static = static && N < STATIC_ARRAY_CUTOFF
