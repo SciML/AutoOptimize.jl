@@ -1,5 +1,7 @@
 # AutoOptimize
 
+#### Note: This repo is still experimental!
+
 Do you want your calculation to go faster but are also too lazy to
 optimize your code? Well I have a solution for you! Introducing the
 AutoOptimize system. With a simple `]add AutoOptimize`, we'll send
