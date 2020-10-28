@@ -18,7 +18,7 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 [compat]
 CUDA = "0.1, 1.0, 2.0"
 DiffEqBase = "6.40"
-ModelingToolkit = "3.11"
+ModelingToolkit = "3.11, 4.0"
 OrdinaryDiffEq = "5.41"
 SparseDiffTools = "1.9"
 SparsityDetection = "0.3"
