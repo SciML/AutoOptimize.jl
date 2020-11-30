@@ -1,5 +1,7 @@
 # AutoOptimize
 
+[![Build Status](https://github.com/SciML/AutoOptimize.jl/workflows/CI/badge.svg)](https://github.com/SciML/AutoOptimize.jl/actions?query=workflow%3ACI)
+
 #### Note: This repo is still experimental!
 
 Do you want your calculation to go faster but are also too lazy to
