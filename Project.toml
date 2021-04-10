@@ -16,7 +16,7 @@ SparsityDetection = "684fba80-ace3-11e9-3d08-3bc7ed6f96df"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [compat]
-CUDA = "0.1, 1.0, 2.0"
+CUDA = "0.1, 1.0, 2.0, 3.0"
 DiffEqBase = "6.40"
 ModelingToolkit = "3.11, 4.0, 5.0"
 OrdinaryDiffEq = "5.41"
